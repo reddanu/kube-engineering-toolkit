@@ -4,6 +4,23 @@ A personal collection of small, read-only tools for inspecting Kubernetes cluste
 
 These are independently written, general-purpose adaptations of operational workflows from the local `toolkit` repository. All bundled examples use synthetic data; no internal endpoints, credentials, or production values are included. They do not read Kubernetes `Secret` objects or modify cluster resources. Command output can still contain environment-specific names and metadata; review it before sharing.
 
+## How It Works
+
+```mermaid
+flowchart LR
+	operator[Operator] --> live[Live reporting tools]
+	operator --> offline[Offline analysis tools]
+	live <--> kubectl[kubectl]
+	kubectl <--> cluster[Kubernetes API]
+	live <--> azure[Azure CLI]
+	azure <--> aks[Azure API]
+	live <--> dns[dig or nslookup]
+	dns <--> resolver[DNS resolver]
+	snapshots[Local synthetic or supplied snapshots] --> offline
+	live --> output[Terminal output]
+	offline --> output
+```
+
 ## Requirements
 
 - Bash 3.2 or newer
@@ -85,11 +102,11 @@ bash offline-cluster-health/cluster-health-summary.sh ./offline-cluster-health/e
 Check A and AAAA records through the system resolver or a specified DNS server:
 
 ```bash
-bash dns-check/dns-check.sh example.org
-bash dns-check/dns-check.sh example.org 1.1.1.1
+bash dns-check/dns-check.sh example.test
+bash dns-check/dns-check.sh example.test 192.0.2.53
 ```
 
-The DNS utility uses `dig` when available and falls back to `nslookup`.
+The DNS utility uses `dig` when available and falls back to `nslookup`. Replace these documentation placeholders with a resolvable hostname and DNS server.
 
 ### AKS node pools
 
