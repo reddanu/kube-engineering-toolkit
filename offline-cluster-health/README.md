@@ -1,6 +1,6 @@
 # Offline Cluster Health
 
-Summarize workload, pod, and node findings from a local TSV snapshot. This is an offline adaptation of the cluster-health reporting workflow in `toolkit`; it does not invoke `kubectl` or contact a cluster.
+Summarize workload, pod, and node findings from a local TSV snapshot. This offline report does not invoke `kubectl` or contact a cluster.
 
 ```bash
 bash cluster-health-summary.sh

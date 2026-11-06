@@ -1,6 +1,6 @@
 # Pods Per Node
 
-An offline adaptation of the pod-per-node discovery utility in `toolkit`. Count pods from a local Kubernetes JSON snapshot without loading kubeconfig, installing the Kubernetes client, or contacting a cluster.
+Count pods from a local Kubernetes JSON snapshot without loading kubeconfig, installing the Kubernetes client, or contacting a cluster.
 
 ```bash
 python3 pods_per_node.py

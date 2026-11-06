@@ -2,23 +2,41 @@
 
 A personal collection of small, read-only tools for inspecting Kubernetes clusters and troubleshooting common workload issues.
 
-These are independently written, general-purpose adaptations of operational workflows from the local `toolkit` repository. All bundled examples use synthetic data; no internal endpoints, credentials, or production values are included. They do not read Kubernetes `Secret` objects or modify cluster resources. Command output can still contain environment-specific names and metadata; review it before sharing.
+Bundled examples use synthetic data. The tools do not read Kubernetes `Secret` objects or modify cluster resources. Command output can contain environment-specific names and metadata; review it before sharing.
 
 ## How It Works
 
+### Live Reports
+
 ```mermaid
 flowchart LR
-	operator[Operator] --> live[Live reporting tools]
-	operator --> offline[Offline analysis tools]
-	live <--> kubectl[kubectl]
-	kubectl <--> cluster[Kubernetes API]
-	live <--> azure[Azure CLI]
-	azure <--> aks[Azure API]
-	live <--> dns[dig or nslookup]
-	dns <--> resolver[DNS resolver]
-	snapshots[Local synthetic or supplied snapshots] --> offline
-	live --> output[Terminal output]
-	offline --> output
+	operator[Operator] --> kubereports["Cluster snapshot, pod triage,<br/>PDBs, namespace labels,<br/>duplicate node addresses"]
+	operator --> aksreport[AKS node-pool report]
+	operator --> dnscheck[DNS check]
+	kubeconfig[Kubeconfig context] --> kubectl[kubectl]
+	kubereports <--> kubectl
+	kubectl <-->|Read resources| cluster[Kubernetes API]
+	aksreport <--> az[Azure CLI]
+	az <-->|List node pools| azure[Azure API]
+	dnscheck <--> resolvertool[dig or nslookup]
+	resolvertool <-->|DNS lookup| resolver[DNS resolver]
+	kubereports --> output[Terminal output]
+	aksreport --> output
+	dnscheck --> output
+```
+
+### Offline Reports
+
+```mermaid
+flowchart LR
+	json[Local JSON snapshots] --> python["Python: cluster, pods per node, Spegel,<br/>Argo CD, etcd, AVI, VMware,<br/>Ansible results and Kong"]
+	json --> powershell[PowerShell AKS inventory]
+	tsv[Local TSV snapshot] --> bash[Bash cluster health]
+	yaml[Local YAML snapshot] --> ansible[Ansible GSLB rule report]
+	python --> output[Terminal output]
+	powershell --> output
+	bash --> output
+	ansible --> output
 ```
 
 ## Requirements
@@ -213,10 +231,6 @@ The live Kubernetes scripts only issue read-only `kubectl get` and local kubecon
 ## Report contract
 
 Offline health analyzers use `HEALTHY`, `WARNING`, or `CRITICAL` in JSON. Their process exits with `0` when no actionable findings exist (`INFO` findings are allowed), `1` when findings need attention, and `2` for invalid arguments or input. A report describes only the supplied snapshot; it is not proof of current live-system health. The Ansible summary exits `1` for failed or unreachable hosts.
-
-## Porting scope
-
-These are original, read-only adaptations of reporting and troubleshooting workflows in `toolkit`, including Kubernetes health checks, pod-per-node discovery, AKS inventory, and GSLB monitoring. Source workflows that retrieve credentials, expose internal endpoints, or mutate resources were excluded. All included fixtures are synthetic. No Terraform or Kong port was derived from source because those folders are placeholders; the existing Kong configuration check is an original offline utility. No source credentials or production data were copied.
 
 ## Safety
 
