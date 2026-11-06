@@ -1,0 +1,22 @@
+{
+  "environment": "demo-edge",
+  "source": "synthetic",
+  "services": [
+    {
+      "name": "demo-api",
+      "sites": {"healthy": 2, "configured": 2},
+      "pools": [{"healthy": 3, "total": 3}, {"healthy": 1, "total": 2}],
+      "traffic_enabled": true
+    },
+    {
+      "name": "demo-catalog",
+      "sites": {"healthy": 1, "configured": 2},
+      "pools": [{"healthy": 0, "total": 2}],
+      "traffic_enabled": false
+    }
+  ],
+  "host_rules": [
+    {"name": "demo-api-route", "sync_status": "Synchronized"},
+    {"name": "demo-catalog-route", "sync_status": "Pending"}
+  ]
+}

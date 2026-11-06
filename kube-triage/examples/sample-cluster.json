@@ -1,0 +1,20 @@
+{
+  "cluster": "demo-lab",
+  "source": "synthetic",
+  "nodes": [
+    {"name": "worker-a", "ready": true},
+    {"name": "worker-b", "ready": false}
+  ],
+  "pods": [
+    {"namespace": "payments", "name": "api-7f6d9", "phase": "Running", "restarts": 0},
+    {"namespace": "payments", "name": "api-7f6d8", "phase": "Running", "restarts": 12},
+    {"namespace": "batch", "name": "worker-4c211", "phase": "Pending", "restarts": 0, "reason": "Insufficient CPU"},
+    {"namespace": "batch", "name": "worker-4c210", "phase": "Failed", "restarts": 1}
+  ],
+  "deployments": [
+    {"namespace": "payments", "name": "api", "desired": 3, "ready": 2}
+  ],
+  "pod_disruption_budgets": [
+    {"namespace": "payments", "name": "api-availability", "allowed_disruptions": 0}
+  ]
+}

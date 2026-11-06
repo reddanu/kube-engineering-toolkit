@@ -1,0 +1,13 @@
+{
+  "environment": "demo-virtualization",
+  "source": "synthetic",
+  "vms": [
+    {"power_state": "poweredOn", "guest_tools": "running", "snapshot_age_days": 2},
+    {"power_state": "poweredOn", "guest_tools": "notRunning", "snapshot_age_days": 18},
+    {"power_state": "poweredOff", "guest_tools": "unknown", "snapshot_age_days": 0}
+  ],
+  "datastores": [
+    {"capacity_gib": 1000, "free_gib": 180},
+    {"capacity_gib": 500, "free_gib": 30}
+  ]
+}

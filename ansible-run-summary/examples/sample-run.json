@@ -1,0 +1,9 @@
+{
+  "playbook": "demo-deploy",
+  "source": "synthetic",
+  "hosts": [
+    {"label": "demo-host-1", "ok": 8, "changed": 2, "failed": 0, "unreachable": 0, "skipped": 1},
+    {"label": "demo-host-2", "ok": 6, "changed": 1, "failed": 1, "unreachable": 0, "skipped": 2},
+    {"label": "demo-host-3", "ok": 0, "changed": 0, "failed": 0, "unreachable": 1, "skipped": 0}
+  ]
+}

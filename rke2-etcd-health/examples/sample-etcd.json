@@ -1,0 +1,14 @@
+{
+  "cluster": "demo-rke2",
+  "source": "synthetic",
+  "members": {
+    "expected": 3,
+    "healthy": 2
+  },
+  "database": {
+    "used_mib": 7400,
+    "quota_mib": 8192
+  },
+  "wal_fsync_p99_ms": 125,
+  "raft_proposals_pending": 8
+}

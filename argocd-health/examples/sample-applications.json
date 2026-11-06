@@ -1,0 +1,13 @@
+{
+  "cluster": "demo-gitops",
+  "source": "synthetic",
+  "controllers": [
+    {"name": "application-controller", "desired": 2, "ready": 2},
+    {"name": "repo-server", "desired": 2, "ready": 1}
+  ],
+  "applications": [
+    {"name": "storefront", "sync": "Synced", "health": "Healthy"},
+    {"name": "catalog", "sync": "OutOfSync", "health": "Healthy"},
+    {"name": "payments", "sync": "Synced", "health": "Degraded"}
+  ]
+}

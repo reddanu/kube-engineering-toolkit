@@ -1,0 +1,16 @@
+{
+  "services": [
+    {"name": "demo-catalog", "host": "catalog.demo.test", "port": 8080, "protocol": "http"},
+    {"name": "demo-orders", "host": "orders.demo.test", "port": 8081, "protocol": "http"}
+  ],
+  "routes": [
+    {"name": "catalog-v1", "service": "demo-catalog", "hosts": ["api.demo.test"], "paths": ["/catalog/v1"]},
+    {"name": "orders-v1", "service": "demo-orders", "hosts": ["api.demo.test"], "paths": ["/orders/v1"]},
+    {"name": "catalog-duplicate", "service": "demo-catalog", "hosts": ["api.demo.test"], "paths": ["/catalog/v1"]},
+    {"name": "orphan-route", "service": "missing-demo-service", "hosts": ["api.demo.test"], "paths": ["/orphan"]}
+  ],
+  "plugins": [
+    {"name": "rate-limiting", "service": "demo-catalog"},
+    {"name": "key-auth", "route": "orphan-route"}
+  ]
+}

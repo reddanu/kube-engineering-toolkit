@@ -1,0 +1,19 @@
+{
+  "cluster": "demo-rke2",
+  "source": "synthetic",
+  "schedulable_nodes": 4,
+  "daemonset": {
+    "desired": 4,
+    "ready": 3
+  },
+  "mirror": {
+    "peer_hits": 72,
+    "origin_misses": 28,
+    "seconds_since_last_success": 420
+  },
+  "errors": {
+    "unknown_blob": 3,
+    "unknown_manifest": 1
+  },
+  "image_pull_failures": 2
+}
