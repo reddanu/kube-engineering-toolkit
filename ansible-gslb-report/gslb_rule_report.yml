@@ -1,0 +1,27 @@
+---
+- name: Report rejected GSLB host rules from a local snapshot
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - examples/gslb-host-rules.yml
+  tasks:
+    - name: Select rejected host rules
+      ansible.builtin.set_fact:
+        rejected_gslb_host_rules: "{{ gslb_host_rules | selectattr('status', 'equalto', 'Rejected') | list }}"
+
+    - name: Report rejected rule count
+      ansible.builtin.debug:
+        msg: "Rejected GSLB host rules: {{ rejected_gslb_host_rules | length }}"
+
+    - name: List rejected host rules
+      ansible.builtin.debug:
+        msg: "{{ item.namespace }}/{{ item.name }} ({{ item.host }}): {{ item.reason }}"
+      loop: "{{ rejected_gslb_host_rules }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Report when all rules are accepted
+      ansible.builtin.debug:
+        msg: "No rejected GSLB host rules in the supplied snapshot."
+      when: rejected_gslb_host_rules | length == 0

@@ -2,12 +2,14 @@
 
 A personal collection of small, read-only tools for inspecting Kubernetes clusters and troubleshooting common workload issues.
 
-These are clean-room, general-purpose utilities. They contain no employer-owned source, internal endpoints, credentials, or environment configuration. They do not read Kubernetes `Secret` objects or modify cluster resources. Command output can still contain environment-specific names and metadata; review it before sharing.
+These are independently written, general-purpose adaptations of operational workflows from the local `toolkit` repository. All bundled examples use synthetic data; no internal endpoints, credentials, or production values are included. They do not read Kubernetes `Secret` objects or modify cluster resources. Command output can still contain environment-specific names and metadata; review it before sharing.
 
 ## Requirements
 
 - Bash 3.2 or newer
 - Python 3.9 or newer for offline JSON analyzers
+- PowerShell 5.1 or newer for the offline AKS inventory report
+- `ansible-core` to run the local GSLB report
 - `kubectl` configured for the cluster you intend to inspect
 - Read permissions for the resources queried by each script
 - Azure CLI (`az`) for the AKS node-pool report
@@ -32,6 +34,15 @@ python3 duplicate-node-addresses/check_duplicate_node_addresses.py --address-typ
 ```
 
 The report includes node names and addresses, which are operational metadata. Review it before sharing.
+
+### Pods per node
+
+Summarize a local Kubernetes snapshot without loading kubeconfig or calling the Kubernetes API:
+
+```bash
+python3 pods-per-node/pods_per_node.py
+python3 pods-per-node/pods_per_node.py --input pods-per-node/examples/pods.json --format json
+```
 
 ### Namespace label selector
 
@@ -58,6 +69,15 @@ Review disruption budgets and allowed disruptions across the cluster, or for one
 ```bash
 bash pdb-report/pdb-report.sh
 bash pdb-report/pdb-report.sh <namespace>
+```
+
+### Offline cluster health
+
+Review a synthetic or sanitized TSV snapshot of deployments, pods, and node conditions without connecting to a cluster:
+
+```bash
+bash offline-cluster-health/cluster-health-summary.sh
+bash offline-cluster-health/cluster-health-summary.sh ./offline-cluster-health/examples/cluster-health.tsv
 ```
 
 ### DNS lookup
@@ -145,6 +165,23 @@ python3 ansible-run-summary/ansible_run_summary.py
 python3 ansible-run-summary/ansible_run_summary.py --format json
 ```
 
+### PowerShell AKS inventory
+
+Summarize cluster and node-pool metadata from a local JSON snapshot without Azure CLI or Az modules:
+
+```powershell
+./powershell-aks-inventory/aks_inventory_report.ps1
+./powershell-aks-inventory/aks_inventory_report.ps1 -Format json
+```
+
+### Ansible GSLB report
+
+Filter a local snapshot for rejected GSLB host rules; this playbook runs on localhost and sends no notifications:
+
+```bash
+ansible-playbook ansible-gslb-report/gslb_rule_report.yml
+```
+
 ### Kong config check
 
 Check synthetic declarative gateway configuration for duplicate routes and unresolved service references:
@@ -154,7 +191,7 @@ python3 kong-config-check/kong_config_check.py
 python3 kong-config-check/kong_config_check.py --format json
 ```
 
-The Kubernetes scripts only issue `kubectl get` and local kubeconfig context commands. The AKS report only lists node pools. All analyzers read local JSON only. None of the tools modify infrastructure or save output to files.
+The live Kubernetes scripts only issue read-only `kubectl get` and local kubeconfig context commands. The AKS report only lists node pools. Offline analyzers read local input only. None of the tools modify infrastructure or save output to files.
 
 ## Report contract
 
@@ -162,7 +199,7 @@ Offline health analyzers use `HEALTHY`, `WARNING`, or `CRITICAL` in JSON. Their 
 
 ## Porting scope
 
-These are clean-room, read-only adaptations of general reporting and troubleshooting patterns from the personal profile repository and the AKS, Kubernetes, Spegel, Rancher/RKE2, AVI/AMKO, VMware, Ansible, and Argo CD areas. Fixed organization labels were replaced with caller-supplied selectors. The Kong configuration check is an original offline utility. No internal URLs, credentials, or production data were copied. Credential and remote-access workflows, cleanup, migration, restart, scaling, and other mutation tools were excluded.
+These are original, read-only adaptations of reporting and troubleshooting workflows in `toolkit`, including Kubernetes health checks, pod-per-node discovery, AKS inventory, and GSLB monitoring. Source workflows that retrieve credentials, expose internal endpoints, or mutate resources were excluded. All included fixtures are synthetic; Terraform and Kong remain out of scope because their source folders are placeholders. No source credentials or production data were copied.
 
 ## Safety
 
@@ -185,4 +222,8 @@ python3 -m py_compile vmware-inventory/vmware_inventory.py
 python3 -m py_compile ansible-run-summary/ansible_run_summary.py
 python3 -m py_compile kong-config-check/kong_config_check.py
 python3 -m py_compile duplicate-node-addresses/check_duplicate_node_addresses.py
+python3 -m py_compile pods-per-node/pods_per_node.py
+pwsh -NoLogo -NoProfile -File powershell-aks-inventory/aks_inventory_report.ps1 -Format json
+ruby -e 'require "yaml"; ARGV.each { |file| YAML.load_file(file); puts "#{file}: valid YAML" }' ansible-gslb-report/gslb_rule_report.yml ansible-gslb-report/examples/gslb-host-rules.yml
+bash -n offline-cluster-health/cluster-health-summary.sh
 ```

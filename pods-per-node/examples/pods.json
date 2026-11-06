@@ -1,0 +1,14 @@
+{
+  "context": "demo-eastus-aks",
+  "nodes": [
+    {"name": "demo-node-a"},
+    {"name": "demo-node-b"},
+    {"name": "demo-node-c"}
+  ],
+  "pods": [
+    {"namespace": "demo-app", "name": "frontend-6f9d", "nodeName": "demo-node-a"},
+    {"namespace": "demo-app", "name": "api-7c2b", "nodeName": "demo-node-a"},
+    {"namespace": "demo-app", "name": "worker-4a81", "nodeName": "demo-node-b"},
+    {"namespace": "demo-app", "name": "pending-55df", "nodeName": null}
+  ]
+}

@@ -1,0 +1,7 @@
+# kind namespace name current desired status
+deployment	demo-app	storefront	2	3	-
+deployment	demo-app	catalog	3	3	-
+pod	demo-app	worker-7d9c	-	-	Pending
+pod	demo-app	api-5f8b	-	-	Running
+node	-	demo-node-a	-	-	Ready
+node	-	demo-node-b	-	-	MemoryPressure

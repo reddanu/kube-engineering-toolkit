@@ -1,0 +1,12 @@
+---
+gslb_host_rules:
+  - namespace: demo-routing
+    name: storefront
+    host: shop.demo.test
+    status: Accepted
+    reason: configuration accepted
+  - namespace: demo-routing
+    name: inventory
+    host: inventory.demo.test
+    status: Rejected
+    reason: synthetic duplicate host assignment
