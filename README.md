@@ -199,7 +199,7 @@ Offline health analyzers use `HEALTHY`, `WARNING`, or `CRITICAL` in JSON. Their 
 
 ## Porting scope
 
-These are original, read-only adaptations of reporting and troubleshooting workflows in `toolkit`, including Kubernetes health checks, pod-per-node discovery, AKS inventory, and GSLB monitoring. Source workflows that retrieve credentials, expose internal endpoints, or mutate resources were excluded. All included fixtures are synthetic; Terraform and Kong remain out of scope because their source folders are placeholders. No source credentials or production data were copied.
+These are original, read-only adaptations of reporting and troubleshooting workflows in `toolkit`, including Kubernetes health checks, pod-per-node discovery, AKS inventory, and GSLB monitoring. Source workflows that retrieve credentials, expose internal endpoints, or mutate resources were excluded. All included fixtures are synthetic. No Terraform or Kong port was derived from source because those folders are placeholders; the existing Kong configuration check is an original offline utility. No source credentials or production data were copied.
 
 ## Safety
 
