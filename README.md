@@ -1,8 +1,8 @@
 # Kubernetes Engineering Toolkit
 
-A personal collection of small, read-only tools for inspecting Kubernetes clusters and troubleshooting common workload issues.
+A personal collection of Kubernetes inspection and troubleshooting tools, plus an opt-in Argo CD Application cleanup tool.
 
-Bundled examples use synthetic data. The tools do not read Kubernetes `Secret` objects or modify cluster resources. Command output can contain environment-specific names and metadata; review it before sharing.
+Bundled examples use synthetic data. The tools do not read Kubernetes `Secret` objects. Most tools are read-only; the Argo CD cleanup tool modifies Application resources only when explicitly requested and confirmed. Command output can contain environment-specific names and metadata; review it before sharing.
 
 ## How It Works
 
@@ -47,6 +47,7 @@ flowchart LR
 - `ansible-core` to run the local GSLB report
 - `kubectl` configured for the cluster you intend to inspect
 - Read permissions for the resources queried by each script
+- `jq` and Application patch/delete permissions for Argo CD cleanup
 - Azure CLI (`az`) for the AKS node-pool report
 
 ## Tools
@@ -164,6 +165,14 @@ python3 argocd-health/argocd_health.py
 python3 argocd-health/argocd_health.py --format json
 ```
 
+### Argo CD cluster cleanup
+
+Preview Applications targeting a decommissioned cluster, or explicitly confirm non-cascading cleanup. ApplicationSets and cluster registrations are not modified. See [the tool guide](argocd-cluster-cleanup/README.md) for matching rules and safety details.
+
+```bash
+bash argocd-cluster-cleanup/argocd-cluster-cleanup.sh --context <argocd-context> --cluster <cluster-name>
+```
+
 ### RKE2 etcd health
 
 Review quorum, database utilization, fsync latency, and pending proposals from synthetic or sanitized metrics:
@@ -226,7 +235,7 @@ python3 kong-config-check/kong_config_check.py
 python3 kong-config-check/kong_config_check.py --format json
 ```
 
-The live Kubernetes scripts only issue read-only `kubectl get` and local kubeconfig context commands. The AKS report only lists node pools. Offline analyzers read local input only. None of the tools modify infrastructure or save output to files.
+The inspection scripts use read-only Kubernetes API and local kubeconfig context commands. The AKS report only lists node pools, and offline analyzers read local input only. The Argo CD cleanup tool can modify Application records when `--cleanup` is explicitly confirmed; it does not modify ApplicationSets or cluster registrations.
 
 ## Report contract
 
